@@ -100,7 +100,7 @@ namespace TriMesh
             }
         }
 
-        public bool IsSuperTriangle { get { return V1.isSuper | V2.isSuper | V3.isSuper; } }
+        public bool IsSuperTriangle { get { return V1.IsSuperVertex | V2.IsSuperVertex | V3.IsSuperVertex; } }
 
         public Triangle(Vertex v1, Vertex v2, Vertex v3)
         {

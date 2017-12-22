@@ -113,9 +113,9 @@ namespace TriMesh
             Vertex v1 = new Vertex(x1 - ad, y1, 0);
             Vertex v2 = new Vertex(x2 + ad, y1, 0);
             Vertex v3 = new Vertex((x1 + x2) / 2, y1 + h, 0);
-            v1.isSuper = true;
-            v2.isSuper = true;
-            v3.isSuper = true;
+            v1.IsSuperVertex = true;
+            v2.IsSuperVertex = true;
+            v3.IsSuperVertex = true;
 
             superTriangle = new Triangle(v1, v2, v3);
             Triangles.SetRootTriangle(superTriangle);
@@ -167,7 +167,7 @@ namespace TriMesh
             {
                 throw new InvalidOperationException("Input vertex should coincide with one or two triangles.");
             }
-            v.inputVertex = true;
+            v.IsInputVertex = true;
             Vertices.Add(v);
 
             OnInsertVertex(new InsertVertexEventArgs(v));

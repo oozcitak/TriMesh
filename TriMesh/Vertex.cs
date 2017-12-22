@@ -2,15 +2,38 @@
 
 namespace TriMesh
 {
+    /// <summary>
+    /// Represents a 2D vertex.
+    /// </summary>
     public sealed class Vertex
     {
-        internal bool isSuper = false;
-        internal bool inputVertex = false;
+        /// <summary>
+        /// Gets whether this vertex belongs to a super triangle.
+        /// </summary>
+        public bool IsSuperVertex { get; internal set; }
+        /// <summary>
+        /// Gets whether this vertex bwlongs to the input vertex set or inserted
+        /// during mesh refinement.
+        /// </summary>
+        public bool IsInputVertex { get; internal set; }
 
+        /// <summary>
+        /// Gets the X coordinate.
+        /// </summary>
         public double X { get; private set; }
+        /// <summary>
+        /// Gets the Y coordinate.
+        /// </summary>
         public double Y { get; private set; }
+        /// <summary>
+        /// Gets the Z coordinate. As far as mesh generation is concerned the Z coordinate
+        /// is ignored. This is solely kept as a user attribute .
+        /// </summary>
         public double Z { get; private set; }
 
+        /// <summary>
+        /// Gets the origin vertex.
+        /// </summary>
         public static Vertex Zero { get { return new Vertex(0, 0, 0); } }
 
         public Vertex(double x, double y, double z)
@@ -18,6 +41,9 @@ namespace TriMesh
             X = x;
             Y = y;
             Z = Z;
+
+            IsSuperVertex = false;
+            IsInputVertex = false;
         }
 
         public double DistanceTo2(Vertex other)

@@ -12,68 +12,7 @@ namespace MeshTest
 {
     public partial class TestForm : Form
     {
-        private class MeshAnim
-        {
-            private static float featureSize = 1;
-
-            public string Name;
-            public SimpleCAD.Drawable NewVertex;
-            public List<SimpleCAD.Drawable> Mesh;
-            public List<SimpleCAD.Drawable> RedTri;
-            public List<SimpleCAD.Drawable> GreenTri;
-            public SimpleCAD.Drawable Edge;
-
-            public MeshAnim(string name, TriMesh.Vertex vertex, List<TriMesh.Triangle> mesh, List<TriMesh.Triangle> reds, List<TriMesh.Triangle> greens, TriMesh.Halfedge edge)
-            {
-                Name = name;
-                if (vertex != null)
-                {
-                    NewVertex = new SimpleCAD.Circle(vertex.ToPointF(), featureSize);
-                    NewVertex.FillStyle = SimpleCAD.FillStyle.Yellow;
-                    NewVertex.OutlineStyle = SimpleCAD.OutlineStyle.Black;
-                }
-                if (mesh != null)
-                {
-                    Mesh = new List<SimpleCAD.Drawable>();
-                    foreach (TriMesh.Triangle t in mesh)
-                    {
-                        Mesh.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGray));
-                    }
-                }
-                if (reds != null)
-                {
-                    RedTri = new List<SimpleCAD.Drawable>();
-                    foreach (TriMesh.Triangle t in reds)
-                    {
-                        RedTri.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightCoral));
-                    }
-                }
-                if (greens != null)
-                {
-                    GreenTri = new List<SimpleCAD.Drawable>();
-                    foreach (TriMesh.Triangle t in greens)
-                    {
-                        GreenTri.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGreen));
-                    }
-                }
-                if (edge != null)
-                {
-                    Edge = new SimpleCAD.Line(edge.V1.ToPointF(), edge.V2.ToPointF());
-                    Edge.OutlineStyle = new SimpleCAD.OutlineStyle(Color.Blue, 3);
-                }
-            }
-
-            private static List<SimpleCAD.Drawable> DrawTri(TriMesh.Triangle t, SimpleCAD.OutlineStyle pen, SimpleCAD.FillStyle fill)
-            {
-                SimpleCAD.Triangle viewtri = new SimpleCAD.Triangle(t.V1.ToPointF(), t.V2.ToPointF(), t.V3.ToPointF());
-                viewtri.FillStyle = fill;
-                viewtri.OutlineStyle = pen;
-
-                return new List<SimpleCAD.Drawable> { viewtri };
-            }
-        }
-
-        bool animate = false;
+        bool animate = true;
         int animDir = 0;
         int keyDownCount = 0;
         SimpleCAD.Drawable selected = null;
@@ -298,6 +237,67 @@ namespace MeshTest
         {
             if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
                 e.IsInputKey = true;
+        }
+
+        private class MeshAnim
+        {
+            private static float featureSize = 1;
+
+            public string Name;
+            public SimpleCAD.Drawable NewVertex;
+            public List<SimpleCAD.Drawable> Mesh;
+            public List<SimpleCAD.Drawable> RedTri;
+            public List<SimpleCAD.Drawable> GreenTri;
+            public SimpleCAD.Drawable Edge;
+
+            public MeshAnim(string name, TriMesh.Vertex vertex, List<TriMesh.Triangle> mesh, List<TriMesh.Triangle> reds, List<TriMesh.Triangle> greens, TriMesh.Halfedge edge)
+            {
+                Name = name;
+                if (vertex != null)
+                {
+                    NewVertex = new SimpleCAD.Circle(vertex.ToPointF(), featureSize);
+                    NewVertex.FillStyle = SimpleCAD.FillStyle.Yellow;
+                    NewVertex.OutlineStyle = SimpleCAD.OutlineStyle.Black;
+                }
+                if (mesh != null)
+                {
+                    Mesh = new List<SimpleCAD.Drawable>();
+                    foreach (TriMesh.Triangle t in mesh)
+                    {
+                        Mesh.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGray));
+                    }
+                }
+                if (reds != null)
+                {
+                    RedTri = new List<SimpleCAD.Drawable>();
+                    foreach (TriMesh.Triangle t in reds)
+                    {
+                        RedTri.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightCoral));
+                    }
+                }
+                if (greens != null)
+                {
+                    GreenTri = new List<SimpleCAD.Drawable>();
+                    foreach (TriMesh.Triangle t in greens)
+                    {
+                        GreenTri.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGreen));
+                    }
+                }
+                if (edge != null)
+                {
+                    Edge = new SimpleCAD.Line(edge.V1.ToPointF(), edge.V2.ToPointF());
+                    Edge.OutlineStyle = new SimpleCAD.OutlineStyle(Color.Blue, 3);
+                }
+            }
+
+            private static List<SimpleCAD.Drawable> DrawTri(TriMesh.Triangle t, SimpleCAD.OutlineStyle pen, SimpleCAD.FillStyle fill)
+            {
+                SimpleCAD.Triangle viewtri = new SimpleCAD.Triangle(t.V1.ToPointF(), t.V2.ToPointF(), t.V3.ToPointF());
+                viewtri.FillStyle = fill;
+                viewtri.OutlineStyle = pen;
+
+                return new List<SimpleCAD.Drawable> { viewtri };
+            }
         }
     }
 

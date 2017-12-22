@@ -170,7 +170,7 @@ namespace TriMesh
             v.inputVertex = true;
             Vertices.Add(v);
 
-            OnInsertVertex(new InsertVertexEventArgs(v, Triangles));
+            OnInsertVertex(new InsertVertexEventArgs(v));
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace TriMesh
         /// <param name="v">The vertex inside the triangle</param>
         private void DivideTriangleAtVertex(Triangle t, Vertex v)
         {
-            OnDividingTriangle(new DividingTriangleEventArgs(v, Triangles, new Triangle[] { t }));
+            OnDividingTriangle(new DividingTriangleEventArgs(v, new Triangle[] { t }));
 
             Triangle t1 = new Triangle(t.V1, t.V2, v);
             Triangle t2 = new Triangle(t.V2, t.V3, v);
@@ -195,7 +195,7 @@ namespace TriMesh
             t.removed = true;
             Triangles.SetRootTriangle(t1);
 
-            OnDividedTriangle(new DividedTriangleEventArgs(v, Triangles, new Triangle[] { t }, new Triangle[] { t1, t2, t3 }));
+            OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { t }, new Triangle[] { t1, t2, t3 }));
 
             // edge flip
             SwapTest(t1.S12, v);
@@ -215,7 +215,7 @@ namespace TriMesh
         /// <param name="v">The vertex on the shared side</param>
         private void DivideTrianglesOnSharedEdge(Triangle tt1, PointOnTriangle loc1, Triangle tt2, PointOnTriangle loc2, Vertex v)
         {
-            OnDividingTriangle(new DividingTriangleEventArgs(v, Triangles, new Triangle[] { tt1, tt2 }));
+            OnDividingTriangle(new DividingTriangleEventArgs(v, new Triangle[] { tt1, tt2 }));
 
             Halfedge e1 = (loc1 == PointOnTriangle.OnS12 ? tt1.S12 : (loc1 == PointOnTriangle.OnS23 ? tt1.S23 : tt1.S31));
             Halfedge e2 = (loc2 == PointOnTriangle.OnS12 ? tt2.S12 : (loc2 == PointOnTriangle.OnS23 ? tt2.S23 : tt2.S31));
@@ -237,7 +237,7 @@ namespace TriMesh
             tt2.removed = true;
             Triangles.SetRootTriangle(t1);
 
-            OnDividedTriangle(new DividedTriangleEventArgs(v, Triangles, new Triangle[] { tt1, tt2 }, new Triangle[] { t1, t2, t3, t4 }));
+            OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { tt1, tt2 }, new Triangle[] { t1, t2, t3, t4 }));
 
             // edge flip
             SwapTest(t1.S31, v);
@@ -308,7 +308,7 @@ namespace TriMesh
             if (tri.Circumcircle.Contains(d) != PointShapeRelation.Inside)
                 return false;
 
-            OnFlippingEdge(new FlippingEdgeEventArgs(e, Triangles, tri, otherTri));
+            OnFlippingEdge(new FlippingEdgeEventArgs(e, tri, otherTri));
 
             // set flipped flag
             tri.flipped = true;
@@ -322,7 +322,7 @@ namespace TriMesh
 
             Triangles.SetRootTriangle(tn1);
 
-            OnFlippedEdge(new FlippedEdgeEventArgs(tn1.S12, Triangles, tn1, tn2));
+            OnFlippedEdge(new FlippedEdgeEventArgs(tn1.S12, tn1, tn2));
 
             SwapTest(tn1.S31, p);
             SwapTest(tn2.S23, p);

@@ -58,31 +58,31 @@ namespace MeshTest
         private void Mesh_FlippedEdge(object sender, TriMesh.FlippedEdgeEventArgs e)
         {
             if(animate)
-                anim.Add(new MeshAnim("Flipped", null, e.CurrentMesh.ToList(), null, new List<TriMesh.Triangle>() { e.NewTriangle1, e.NewTriangle2 }, e.Edge));
+                anim.Add(new MeshAnim("Flipped", null, mesh.Triangles.ToList(), null, new List<TriMesh.Triangle>() { e.NewTriangle1, e.NewTriangle2 }, e.Edge));
         }
 
         private void Mesh_FlippingEdge(object sender, TriMesh.FlippingEdgeEventArgs e)
         {
             if (animate)
-                anim.Add(new MeshAnim("Flipping", null, e.CurrentMesh.ToList(), new List<TriMesh.Triangle>() { e.BadTriangle1, e.BadTriangle2 }, null, e.Edge));
+                anim.Add(new MeshAnim("Flipping", null, mesh.Triangles.ToList(), new List<TriMesh.Triangle>() { e.BadTriangle1, e.BadTriangle2 }, null, e.Edge));
         }
 
         private void Mesh_DividingTriangle(object sender, TriMesh.DividingTriangleEventArgs e)
         {
             if (animate)
-                anim.Add(new MeshAnim("Dividing", e.NewVertex, e.CurrentMesh.ToList(), e.Triangles.ToList(), null, null));
+                anim.Add(new MeshAnim("Dividing", e.NewVertex, mesh.Triangles.ToList(), e.Triangles.ToList(), null, null));
         }
 
         private void Mesh_DividedTriangle(object sender, TriMesh.DividedTriangleEventArgs e)
         {
             if (animate)
-                anim.Add(new MeshAnim("Divided", e.NewVertex, e.CurrentMesh.ToList(), null, e.NewTriangles.ToList(), null));
+                anim.Add(new MeshAnim("Divided", e.NewVertex, mesh.Triangles.ToList(), null, e.NewTriangles.ToList(), null));
         }
 
         private void Mesh_InsertVertex(object sender, TriMesh.InsertVertexEventArgs e)
         {
             if (animate)
-                anim.Add(new MeshAnim("Vertex Inserted", e.NewVertex, e.CurrentMesh.ToList(), null, null, null));
+                anim.Add(new MeshAnim("Vertex Inserted", e.NewVertex, mesh.Triangles.ToList(), null, null, null));
         }
 
         private void UpdateModel()

@@ -6,25 +6,21 @@ namespace TriMesh
     public class InsertVertexEventArgs : EventArgs
     {
         public Vertex NewVertex { get; private set; }
-        public IEnumerable<Triangle> CurrentMesh { get; private set; }
 
-        public InsertVertexEventArgs(Vertex vertex, IEnumerable<Triangle> mesh)
+        public InsertVertexEventArgs(Vertex vertex)
         {
             NewVertex = vertex;
-            CurrentMesh = mesh;
         }
     }
 
     public class DividingTriangleEventArgs : EventArgs
     {
         public Vertex NewVertex { get; private set; }
-        public IEnumerable<Triangle> CurrentMesh { get; private set; }
         public IEnumerable<Triangle> Triangles { get; private set; }
 
-        public DividingTriangleEventArgs(Vertex vertex, IEnumerable<Triangle> mesh, IEnumerable<Triangle> tri)
+        public DividingTriangleEventArgs(Vertex vertex, IEnumerable<Triangle> tri)
         {
             NewVertex = vertex;
-            CurrentMesh = mesh;
             Triangles = tri;
         }
     }
@@ -32,30 +28,26 @@ namespace TriMesh
     public class DividedTriangleEventArgs : EventArgs
     {
         public Vertex NewVertex { get; private set; }
-        public IEnumerable<Triangle> CurrentMesh { get; private set; }
         public IEnumerable<Triangle> DividedTriangles { get; private set; }
         public IEnumerable<Triangle> NewTriangles { get; private set; }
 
-        public DividedTriangleEventArgs(Vertex vertex, IEnumerable<Triangle> mesh, IEnumerable<Triangle> tri, IEnumerable<Triangle> add)
+        public DividedTriangleEventArgs(Vertex vertex, IEnumerable<Triangle> divided, IEnumerable<Triangle> added)
         {
             NewVertex = vertex;
-            CurrentMesh = mesh;
-            DividedTriangles = tri;
-            NewTriangles = add;
+            DividedTriangles = divided;
+            NewTriangles = added;
         }
     }
 
     public class FlippingEdgeEventArgs : EventArgs
     {
         public Halfedge Edge { get; private set; }
-        public IEnumerable<Triangle> CurrentMesh { get; private set; }
         public Triangle BadTriangle1 { get; private set; }
         public Triangle BadTriangle2 { get; private set; }
 
-        public FlippingEdgeEventArgs(Halfedge edge, IEnumerable<Triangle> mesh, Triangle t1, Triangle t2)
+        public FlippingEdgeEventArgs(Halfedge edge, Triangle t1, Triangle t2)
         {
             Edge = edge;
-            CurrentMesh = mesh;
             BadTriangle1 = t1;
             BadTriangle2 = t2;
         }
@@ -64,14 +56,12 @@ namespace TriMesh
     public class FlippedEdgeEventArgs : EventArgs
     {
         public Halfedge Edge { get; private set; }
-        public IEnumerable<Triangle> CurrentMesh { get; private set; }
         public Triangle NewTriangle1 { get; private set; }
         public Triangle NewTriangle2 { get; private set; }
 
-        public FlippedEdgeEventArgs(Halfedge edge, IEnumerable<Triangle> mesh, Triangle t1, Triangle t2)
+        public FlippedEdgeEventArgs(Halfedge edge, Triangle t1, Triangle t2)
         {
             Edge = edge;
-            CurrentMesh = mesh;
             NewTriangle1 = t1;
             NewTriangle2 = t2;
         }

@@ -3,7 +3,7 @@
 namespace TriMesh
 {
     /// <summary>
-    /// Represents a 2D vertex.
+    /// Represents a 2D location.
     /// </summary>
     public sealed class Vertex
     {
@@ -47,6 +47,11 @@ namespace TriMesh
             IsInputVertex = false;
         }
 
+        /// <summary>
+        /// Returns the distance to the given vertex.
+        /// </summary>
+        /// <param name="other">The other vertex to measure the distance to.</param>
+        /// <returns>Distance between the vertices.</returns>
         public double DistanceTo(Vertex other)
         {
             double dx = X - other.X;
@@ -82,6 +87,16 @@ namespace TriMesh
             return new Vector(a.X - b.X, a.Y - b.Y);
         }
 
+        /// <summary>
+        /// Interpolates an attribute between two vertices.
+        /// </summary>
+        /// <param name="a">The first vertex</param>
+        /// <param name="b">The second vertex</param>
+        /// <param name="aZ">Attribute of the first vertex</param>
+        /// <param name="bZ">Attribute of the second vertex</param>
+        /// <param name="x">X coordinate of the new location</param>
+        /// <param name="y">Y coordinate of the new location</param>
+        /// <returns>Interpolated attribute value at the new location</returns>
         public static double InterpolateAttribute(Vertex a, Vertex b, double aZ, double bZ, double x, double y)
         {
             double d2 = (b - a).Length;
@@ -91,6 +106,23 @@ namespace TriMesh
             double d1 = (v - a).Length;
 
             return d1 / d2 * (bZ - aZ) + aZ;
+        }
+
+        /// <summary>
+        /// Calculates the average of the given vertices.
+        /// </summary>
+        /// <param name="vertices">A list of vertices</param>
+        /// <returns>The average of the given vertices</returns>
+        public static Vertex Average(params Vertex[] vertices)
+        {
+            double n = vertices.Length;
+            double x = 0, y = 0;
+            foreach (Vertex v in vertices)
+            {
+                x += v.X;
+                y += v.Y;
+            }
+            return new Vertex(x / n, y / n);
         }
 
         public override bool Equals(object obj)
@@ -119,18 +151,6 @@ namespace TriMesh
         public override string ToString()
         {
             return X.ToString("F2") + ", " + Y.ToString("F2");
-        }
-
-        public static Vertex Average(params Vertex[] vertices)
-        {
-            double n = vertices.Length;
-            double x = 0, y = 0;
-            foreach (Vertex v in vertices)
-            {
-                x += v.X;
-                y += v.Y;
-            }
-            return new Vertex(x / n, y / n);
         }
     }
 }

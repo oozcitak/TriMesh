@@ -2,16 +2,34 @@
 
 namespace TriMesh
 {
+    /// <summary>
+    /// Represents a 2D displacement.
+    /// </summary>
     public sealed class Vector
     {
         private double? len = null;
         private double? lensq = null;
 
+        /// <summary>
+        /// Gets the X coordinate.
+        /// </summary>
         public double X { get; private set; }
+        /// <summary>
+        /// Gets the Y coordinate.
+        /// </summary>
         public double Y { get; private set; }
 
+        /// <summary>
+        /// Gets the zero vector.
+        /// </summary>
         public static Vector Zero { get { return new Vector(0, 0); } }
+        /// <summary>
+        /// Gets the unit vector along X axis.
+        /// </summary>
         public static Vector UnitX { get { return new Vector(1, 0); } }
+        /// <summary>
+        /// Gets the unit vector along Y axis.
+        /// </summary>
         public static Vector UnitY { get { return new Vector(0, 1); } }
 
         public Vector(double x, double y)
@@ -20,6 +38,9 @@ namespace TriMesh
             Y = y;
         }
 
+        /// <summary>
+        /// Gets the square of the magnitude of the vector.
+        /// </summary>
         public double LengthSquared
         {
             get
@@ -32,6 +53,9 @@ namespace TriMesh
             }
         }
 
+        /// <summary>
+        /// Gets the magnitude of the vector.
+        /// </summary>
         public double Length
         {
             get
@@ -44,6 +68,10 @@ namespace TriMesh
             }
         }
 
+        /// <summary>
+        /// Returns the normalized vector.
+        /// </summary>
+        /// <returns></returns>
         public Vector Normalize()
         {
             return this / this.Length;
@@ -74,6 +102,11 @@ namespace TriMesh
             return X.ToString("F2") + ", " + Y.ToString("F2");
         }
 
+        /// <summary>
+        /// Calculates the average of the given vectors.
+        /// </summary>
+        /// <param name="vectors">A list of vectors</param>
+        /// <returns>The average of the given vectors</returns>
         public static Vector Average(params Vector[] vectors)
         {
             double n = vectors.Length;

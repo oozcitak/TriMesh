@@ -2,6 +2,9 @@
 
 namespace TriMesh
 {
+    /// <summary>
+    /// Contains utility functions.
+    /// </summary>
     public class Utility
     {
         /// <summary>

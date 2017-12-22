@@ -128,7 +128,7 @@ namespace TriMesh
         {
             foreach (Triangle t in Triangles)
             {
-                if (t.SuperTriangle) t.removed = true;
+                if (t.IsSuperTriangle) t.removed = true;
             }
         }
 

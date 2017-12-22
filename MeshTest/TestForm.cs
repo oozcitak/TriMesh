@@ -33,7 +33,7 @@ namespace MeshTest
             mesh.FlippingEdge += Mesh_FlippingEdge; mesh.FlippedEdge += Mesh_FlippedEdge;
             mesh.InsertVertex += Mesh_InsertVertex;
             Random r = new Random();
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 200; i++)
             {
                 double x = r.NextDouble() * 100;
                 double y = r.NextDouble() * 100;
@@ -57,7 +57,7 @@ namespace MeshTest
 
         private void Mesh_FlippedEdge(object sender, TriMesh.FlippedEdgeEventArgs e)
         {
-            if(animate)
+            if (animate)
                 anim.Add(new MeshAnim("Flipped", null, mesh.Triangles.ToList(), null, new List<TriMesh.Triangle>() { e.NewTriangle1, e.NewTriangle2 }, e.Edge));
         }
 
@@ -172,16 +172,28 @@ namespace MeshTest
                 keyDownCount = 0;
                 timerAnim.Interval = 100;
             }
+            if (e.KeyCode == Keys.PageUp)
+            {
+                animDir = -20;
+                keyDownCount = 0;
+                timerAnim.Interval = 100;
+            }
+            else if (e.KeyCode == Keys.PageDown)
+            {
+                animDir = 20;
+                keyDownCount = 0;
+                timerAnim.Interval = 100;
+            }
         }
 
         private void meshView_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Left && animDir == -1)
+            if ((e.KeyCode == Keys.Left || e.KeyCode == Keys.PageUp) && animDir < 0)
             {
                 if (keyDownCount == 0) timerAnim_Tick(null, null);
                 animDir = 0;
             }
-            else if (e.KeyCode == Keys.Right && animDir == 1)
+            else if ((e.KeyCode == Keys.Right || e.KeyCode == Keys.PageDown) && animDir > 0)
             {
                 if (keyDownCount == 0) timerAnim_Tick(null, null);
                 animDir = 0;
@@ -201,8 +213,8 @@ namespace MeshTest
                     timerAnim.Interval = 10;
 
                 step += animDir;
-                if (step == -1) step = maxStep;
-                if (step == maxStep + 1) step = 0;
+                if (step < 0) step += maxStep + 1;
+                if (step > maxStep) step -= maxStep + 1;
                 selected = null;
                 UpdateModel();
             }
@@ -264,7 +276,10 @@ namespace MeshTest
                     Mesh = new List<SimpleCAD.Drawable>();
                     foreach (TriMesh.Triangle t in mesh)
                     {
-                        Mesh.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGray));
+                        if (t.IsSuperTriangle)
+                            Mesh.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGray));
+                        else
+                            Mesh.AddRange(DrawTri(t, SimpleCAD.OutlineStyle.Black, SimpleCAD.FillStyle.LightGoldenrodYellow));
                     }
                 }
                 if (reds != null)

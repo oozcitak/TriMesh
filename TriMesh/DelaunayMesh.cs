@@ -17,23 +17,29 @@ namespace TriMesh
 
         private Extents limits = new Extents();
         private Triangle superTriangle = null;
+        private System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
         /// <summary>
-        /// Gets the collection of input vertices
+        /// Gets the collection of input vertices.
         /// </summary>
         public VertexCollection InputVertices { get; private set; }
         /// <summary>
-        /// Gets the collection of mesh vertices
+        /// Gets the collection of mesh vertices.
         /// </summary>
         public VertexCollection Vertices { get; private set; }
         /// <summary>
-        /// Gets the collection of mesh triangles
+        /// Gets the collection of mesh triangles.
         /// </summary>
         public TriangleCollection Triangles { get; private set; }
         /// <summary>
-        /// Gets the time elapsed for the last triangulation
+        /// Gets the time elapsed for the last triangulation.
         /// </summary>
         public TimeSpan ElapsedTime { get; private set; }
+        /// <summary>
+        /// Gets the time elapsed for the last triangulation including
+        /// time spent in event handlers.
+        /// </summary>
+        public TimeSpan ElapsedTimeWithEvents { get; private set; }
 
         public DelaunayMesh()
         {
@@ -71,8 +77,9 @@ namespace TriMesh
         /// </summary>
         public void Triangulate()
         {
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            System.Diagnostics.Stopwatch swEvents = new System.Diagnostics.Stopwatch();
             sw.Start();
+            swEvents.Start();
 
             InitMesh();
             CreateSuperTriangle();
@@ -80,7 +87,10 @@ namespace TriMesh
             RemoveSuperTriangles();
 
             sw.Stop();
+            swEvents.Stop();
+
             ElapsedTime = sw.Elapsed;
+            ElapsedTimeWithEvents = swEvents.Elapsed;
         }
 
         /// <summary>
@@ -332,27 +342,37 @@ namespace TriMesh
 
         protected virtual void OnInsertVertex(InsertVertexEventArgs e)
         {
+            sw.Stop();
             InsertVertex?.Invoke(this, e);
+            sw.Start();
         }
 
         protected virtual void OnDividingTriangle(DividingTriangleEventArgs e)
         {
+            sw.Stop();
             DividingTriangle?.Invoke(this, e);
+            sw.Start();
         }
 
         protected virtual void OnDividedTriangle(DividedTriangleEventArgs e)
         {
+            sw.Stop();
             DividedTriangle?.Invoke(this, e);
+            sw.Start();
         }
 
         protected virtual void OnFlippingEdge(FlippingEdgeEventArgs e)
         {
+            sw.Stop();
             FlippingEdge?.Invoke(this, e);
+            sw.Start();
         }
 
         protected virtual void OnFlippedEdge(FlippedEdgeEventArgs e)
         {
+            sw.Stop();
             FlippedEdge?.Invoke(this, e);
+            sw.Start();
         }
     }
 }

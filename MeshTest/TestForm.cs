@@ -33,7 +33,7 @@ namespace MeshTest
             mesh.FlippingEdge += Mesh_FlippingEdge; mesh.FlippedEdge += Mesh_FlippedEdge;
             mesh.InsertVertex += Mesh_InsertVertex;
             Random r = new Random();
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 double x = r.NextDouble() * 100;
                 double y = r.NextDouble() * 100;
@@ -42,7 +42,7 @@ namespace MeshTest
             }
             anim.Add(new MeshAnim("Started", null, null, null, null, null));
             mesh.Triangulate();
-            statusLabel.Text = "Created " + mesh.Triangles.Count + " triangles from " + mesh.InputVertices.Count + " input vertices in " + mesh.ElapsedTime.TotalSeconds.ToString("0.00") + " seconds.";
+            statusLabel.Text = "Created " + mesh.Triangles.Count + " triangles from " + mesh.InputVertices.Count + " input vertices in " + mesh.ElapsedTime.TotalSeconds.ToString("0.00") + " seconds (" + mesh.ElapsedTimeWithEvents.TotalSeconds.ToString("0.00") + " seconds with events).";
 
             anim.Add(new MeshAnim("Completed", null, mesh.Triangles.ToList(), null, null, null));
 

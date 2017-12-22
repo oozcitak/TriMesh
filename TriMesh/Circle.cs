@@ -26,7 +26,7 @@ namespace TriMesh
 
         public PointShapeRelation Contains(Vertex v)
         {
-            double dist = (v - Center).Length2 - R;
+            double dist = (v - Center).Length - R;
             if (Utility.AlmostZero(dist))
                 return PointShapeRelation.On;
             else if (dist < 0)

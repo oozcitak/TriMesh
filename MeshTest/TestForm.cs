@@ -33,7 +33,7 @@ namespace MeshTest
             mesh.FlippingEdge += Mesh_FlippingEdge; mesh.FlippedEdge += Mesh_FlippedEdge;
             mesh.InsertVertex += Mesh_InsertVertex;
             Random r = new Random();
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 200; i++)
             {
                 double x = r.NextDouble() * 100;
                 double y = r.NextDouble() * 100;

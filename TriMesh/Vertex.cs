@@ -26,39 +26,32 @@ namespace TriMesh
         /// </summary>
         public double Y { get; private set; }
         /// <summary>
-        /// Gets the Z coordinate. As far as mesh generation is concerned the Z coordinate
-        /// is ignored. This is solely kept as a user attribute .
+        /// Gets the array of user attributes. As far as mesh generation is concerned those
+        /// are ignored. However, those attributes are linearly interpolated between vertices 
+        /// when new vertices are inserted between existing ones.
         /// </summary>
-        public double Z { get; private set; }
+        public double[] Attributes { get; private set; }
 
         /// <summary>
         /// Gets the origin vertex.
         /// </summary>
-        public static Vertex Zero { get { return new Vertex(0, 0, 0); } }
+        public static Vertex Zero { get { return new Vertex(0, 0); } }
 
-        public Vertex(double x, double y, double z)
+        public Vertex(double x, double y, params double[] attributes)
         {
             X = x;
             Y = y;
-            Z = Z;
+            Attributes = attributes;
 
             IsSuperVertex = false;
             IsInputVertex = false;
         }
 
-        public double DistanceTo2(Vertex other)
+        public double DistanceTo(Vertex other)
         {
             double dx = X - other.X;
             double dy = Y - other.Y;
             return Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        public double DistanceTo3(Vertex other)
-        {
-            double dx = X - other.X;
-            double dy = Y - other.Y;
-            double dz = Z - other.Z;
-            return Math.Sqrt(dx * dx + dy * dy + dz * dz);
         }
 
         public static bool operator ==(Vertex a, Vector b)
@@ -76,28 +69,28 @@ namespace TriMesh
 
         public static Vertex operator +(Vertex a, Vector b)
         {
-            return new Vertex(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+            return new Vertex(a.X + b.X, a.Y + b.Y);
         }
 
         public static Vertex operator -(Vertex a, Vector b)
         {
-            return new Vertex(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+            return new Vertex(a.X - b.X, a.Y - b.Y);
         }
 
         public static Vector operator -(Vertex a, Vertex b)
         {
-            return new Vector(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+            return new Vector(a.X - b.X, a.Y - b.Y);
         }
 
-        public static double InterpolateZ(Vertex a, Vertex b, double x, double y)
+        public static double InterpolateAttribute(Vertex a, Vertex b, double aZ, double bZ, double x, double y)
         {
-            double d2 = (b - a).Length2;
-            if (Utility.AlmostZero(d2)) return (a.Z + b.Z) / 2;
+            double d2 = (b - a).Length;
+            if (Utility.AlmostZero(d2)) return (aZ + bZ) / 2;
 
             Vertex v = new Vertex(x, y, 0);
-            double d1 = (v - a).Length2;
+            double d1 = (v - a).Length;
 
-            return d1 / d2 * (b.Z - a.Z) + a.Z;
+            return d1 / d2 * (bZ - aZ) + aZ;
         }
 
         public override bool Equals(object obj)
@@ -125,20 +118,19 @@ namespace TriMesh
 
         public override string ToString()
         {
-            return X.ToString("F2") + ", " + Y.ToString("F2") + ", " + Z.ToString("F2");
+            return X.ToString("F2") + ", " + Y.ToString("F2");
         }
 
         public static Vertex Average(params Vertex[] vertices)
         {
             double n = vertices.Length;
-            double x = 0, y = 0, z = 0;
+            double x = 0, y = 0;
             foreach (Vertex v in vertices)
             {
                 x += v.X;
                 y += v.Y;
-                z += v.Z;
             }
-            return new Vertex(x / n, y / n, z / n);
+            return new Vertex(x / n, y / n);
         }
     }
 }

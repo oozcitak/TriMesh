@@ -93,7 +93,7 @@ namespace TriMesh
             {
                 if (minAngle == null)
                 {
-                    double d = Math.Min(S12.Length2, Math.Min(S23.Length2, S31.Length2));
+                    double d = Math.Min(S12.Length, Math.Min(S23.Length, S31.Length));
                     minAngle = Math.Asin(d / (2 * Circumcircle.R));
                 }
                 return minAngle.Value;
@@ -263,9 +263,9 @@ namespace TriMesh
             }
             else
             {
-                double d12 = a12 / S12.Length2;
-                double d23 = a23 / S23.Length2;
-                double d31 = a31 / S31.Length2;
+                double d12 = a12 / S12.Length;
+                double d23 = a23 / S23.Length;
+                double d31 = a31 / S31.Length;
                 if (d12 < d23 && d12 < d31)
                     closestEdge = S12;
                 else if (d23 < d12 && d23 < d31)

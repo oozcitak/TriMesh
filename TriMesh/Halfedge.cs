@@ -17,10 +17,9 @@ namespace TriMesh
         public Halfedge Opposite = null;
 
         public Vector Direction { get { if (dir == null) { dir = V2 - V1; } return dir; } }
-        public Vector Normal { get { if (normal == null) { normal = new Vector(V2.Y - V1.Y, V1.X - V2.X, 0).Normalize(); } return normal; } }
+        public Vector Normal { get { if (normal == null) { normal = new Vector(V2.Y - V1.Y, V1.X - V2.X).Normalize(); } return normal; } }
 
-        public double Length2 { get { return Direction.Length2; } }
-        public double Length3 { get { return Direction.Length3; } }
+        public double Length { get { return Direction.Length; } }
 
         public Circle Circumcircle
         {
@@ -28,7 +27,7 @@ namespace TriMesh
             {
                 if (circumcircle == null)
                 {
-                    circumcircle = new Circle(Vertex.Average(V1, V2), V1.DistanceTo2(V2) / 2);
+                    circumcircle = new Circle(Vertex.Average(V1, V2), V1.DistanceTo(V2) / 2);
                 }
                 return circumcircle;
             }

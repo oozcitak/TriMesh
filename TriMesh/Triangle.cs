@@ -24,9 +24,6 @@ namespace TriMesh
         public Triangle N23 { get { return (S23 == null ? null : (S23.Opposite == null ? null : S23.Opposite.Parent)); } }
         public Triangle N31 { get { return (S31 == null ? null : (S31.Opposite == null ? null : S31.Opposite.Parent)); } }
 
-        internal Triangle parent = null;
-        internal HashSet<Triangle> children = new HashSet<Triangle>();
-
         internal bool flipped = false;
         internal bool removed = false;
         internal int mark = 0;

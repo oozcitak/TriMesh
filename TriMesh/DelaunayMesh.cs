@@ -78,7 +78,6 @@ namespace TriMesh
             CreateSuperTriangle();
             InsertInputVertices();
             RemoveSuperTriangles();
-            Triangles = new TriangleCollection(superTriangle);
 
             sw.Stop();
             ElapsedTime = sw.Elapsed;
@@ -90,7 +89,7 @@ namespace TriMesh
         private void InitMesh()
         {
             Vertices = new VertexCollection();
-            Triangles = new TriangleCollection(superTriangle);
+            Triangles = new TriangleCollection();
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace TriMesh
             v3.isSuper = true;
 
             superTriangle = new Triangle(v1, v2, v3);
-            Triangles = new TriangleCollection(superTriangle);
+            Triangles.SetRootTriangle(superTriangle);
         }
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace TriMesh
         /// </summary>
         private void RemoveSuperTriangles()
         {
-            foreach (Triangle t in Triangles.RawList())
+            foreach (Triangle t in Triangles)
             {
                 if (t.SuperTriangle) t.removed = true;
             }
@@ -183,28 +182,25 @@ namespace TriMesh
         /// <param name="v">The vertex inside the triangle</param>
         private void DivideTriangleAtVertex(Triangle t, Vertex v)
         {
-            if (t.children.Count != 0)
-                throw new InvalidOperationException("Cannot divide a parent triangle.");
-
             OnDividingTriangle(new DividingTriangleEventArgs(v, Triangles, new Triangle[] { t }));
 
             Triangle t1 = new Triangle(t.V1, t.V2, v);
             Triangle t2 = new Triangle(t.V2, t.V3, v);
             Triangle t3 = new Triangle(t.V3, t.V1, v);
+
             t1.SetMeshParams(t.S12.Opposite, t2.S31, t3.S23);
             t2.SetMeshParams(t.S23.Opposite, t3.S31, t1.S23);
             t3.SetMeshParams(t.S31.Opposite, t1.S31, t2.S23);
-            t1.parent = t;
-            t2.parent = t;
-            t3.parent = t;
+
             t.removed = true;
-            t.children = new HashSet<Triangle>() { t1, t2, t3 };
+            Triangles.SetRootTriangle(t1);
+
+            OnDividedTriangle(new DividedTriangleEventArgs(v, Triangles, new Triangle[] { t }, new Triangle[] { t1, t2, t3 }));
+
             // edge flip
             SwapTest(t1.S12, v);
             SwapTest(t2.S12, v);
             SwapTest(t3.S12, v);
-
-            OnDividedTriangle(new DividedTriangleEventArgs(v, Triangles, new Triangle[] { t }, t.children.Where(p => p.removed == false && p.flipped == false)));
         }
 
         /// <summary>
@@ -219,35 +215,35 @@ namespace TriMesh
         /// <param name="v">The vertex on the shared side</param>
         private void DivideTrianglesOnSharedEdge(Triangle tt1, PointOnTriangle loc1, Triangle tt2, PointOnTriangle loc2, Vertex v)
         {
-            if (tt1.children.Count != 0 || tt2.children.Count != 0)
-                throw new InvalidOperationException("Cannot divide a parent triangle.");
-
             OnDividingTriangle(new DividingTriangleEventArgs(v, Triangles, new Triangle[] { tt1, tt2 }));
 
             Halfedge e1 = (loc1 == PointOnTriangle.OnS12 ? tt1.S12 : (loc1 == PointOnTriangle.OnS23 ? tt1.S23 : tt1.S31));
             Halfedge e2 = (loc2 == PointOnTriangle.OnS12 ? tt2.S12 : (loc2 == PointOnTriangle.OnS23 ? tt2.S23 : tt2.S31));
 
             // Divide into four triangles
-            DivideTriangleOnEdge(tt1, loc1, v);
-            DivideTriangleOnEdge(tt2, loc2, v);
+            Triangle[] tn1 = DivideTriangleOnEdge(tt1, loc1, v);
+            Triangle[] tn2 = DivideTriangleOnEdge(tt2, loc2, v);
 
-            Triangle t1 = tt1.children.ToArray()[0];
-            Triangle t2 = tt1.children.ToArray()[1];
-            Triangle t3 = tt2.children.ToArray()[0];
-            Triangle t4 = tt2.children.ToArray()[1];
+            Triangle t1 = tn1[0];
+            Triangle t2 = tn1[1];
+            Triangle t3 = tn2[0];
+            Triangle t4 = tn2[1];
             t1.SetMeshParams(t4.S12, t2.S31, null);
             t2.SetMeshParams(t3.S12, null, t1.S23);
             t3.SetMeshParams(t2.S12, t4.S31, null);
             t4.SetMeshParams(t1.S12, null, t3.S23);
+
+            tt1.removed = true;
+            tt2.removed = true;
+            Triangles.SetRootTriangle(t1);
+
+            OnDividedTriangle(new DividedTriangleEventArgs(v, Triangles, new Triangle[] { tt1, tt2 }, new Triangle[] { t1, t2, t3, t4 }));
 
             // edge flip
             SwapTest(t1.S31, v);
             SwapTest(t2.S23, v);
             SwapTest(t3.S31, v);
             SwapTest(t4.S23, v);
-
-            OnDividedTriangle(new DividedTriangleEventArgs(v, Triangles, new Triangle[] { tt1, tt2 },
-                tt1.children.Where(p => p.removed == false && p.flipped == false).Concat(tt2.children.Where(p => p.removed == false && p.flipped == false))));
         }
 
         /// <summary>
@@ -257,7 +253,7 @@ namespace TriMesh
         /// <param name="t">The triangle to divide</param>
         /// <param name="loc">The location of the vertex on the triangle</param>
         /// <param name="v">The vertex on the side</param>
-        private void DivideTriangleOnEdge(Triangle t, PointOnTriangle loc, Vertex v)
+        private Triangle[] DivideTriangleOnEdge(Triangle t, PointOnTriangle loc, Vertex v)
         {
             Triangle t1 = null;
             Triangle t2 = null;
@@ -287,10 +283,7 @@ namespace TriMesh
                 t2.SetMeshParams(t.S31.Opposite, t.S12.Opposite, t1.S23);
             }
 
-            t1.parent = t;
-            t2.parent = t;
-            t.removed = true;
-            t.children = new HashSet<Triangle>() { t1, t2 };
+            return new Triangle[] { t1, t2 };
         }
 
         /// <summary>
@@ -318,8 +311,6 @@ namespace TriMesh
             OnFlippingEdge(new FlippingEdgeEventArgs(e, Triangles, tri, otherTri));
 
             // set flipped flag
-            Triangle p1 = tri.parent;
-            Triangle p2 = otherTri.parent;
             tri.flipped = true;
             otherTri.flipped = true;
 
@@ -329,13 +320,7 @@ namespace TriMesh
             tn1.SetMeshParams(tn2.S12, e.Prev.Opposite, e.Opposite.Next.Opposite);
             tn2.SetMeshParams(tn1.S12, e.Opposite.Prev.Opposite, e.Next.Opposite);
 
-            // both parents hold references to new triangles
-            tn1.parent = p1;
-            tn2.parent = p1;
-            p1.children.Add(tn1);
-            p1.children.Add(tn2);
-            p2.children.Add(tn1);
-            p2.children.Add(tn2);
+            Triangles.SetRootTriangle(tn1);
 
             OnFlippedEdge(new FlippedEdgeEventArgs(tn1.S12, Triangles, tn1, tn2));
 

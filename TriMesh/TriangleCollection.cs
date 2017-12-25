@@ -72,7 +72,7 @@ namespace TriMesh
                 if (rel == PointShapeRelation.Inside)
                 {
                     // Inside triangle, return.
-                    return new FindTriangle[] { new FindTriangle(current, loc) };
+                    return new FindTriangle[] { new FindTriangle(current, rel, loc) };
                 }
                 else if (rel == PointShapeRelation.Outside)
                 {
@@ -88,14 +88,14 @@ namespace TriMesh
                     Halfedge opp = closestEdge.Opposite;
                     if (opp == null)
                     {
-                        return new FindTriangle[] { new FindTriangle(current, loc) };
+                        return new FindTriangle[] { new FindTriangle(current, rel, loc) };
                     }
                     else
                     {
                         Triangle other = opp.Parent;
                         PointOnTriangle otherLoc = PointOnTriangle.None;
-                        other.Contains(v, out otherLoc);
-                        return new FindTriangle[] { new FindTriangle(current, loc), new FindTriangle(other, otherLoc) };
+                        PointShapeRelation otherRel = other.Contains(v, out otherLoc);
+                        return new FindTriangle[] { new FindTriangle(current, rel, loc), new FindTriangle(other, otherRel, otherLoc) };
                     }
                 }
             }
@@ -112,11 +112,13 @@ namespace TriMesh
         internal struct FindTriangle
         {
             public Triangle Triangle { get; private set; }
+            public PointShapeRelation Relation { get; private set; }
             public PointOnTriangle Location { get; private set; }
 
-            public FindTriangle(Triangle tri, PointOnTriangle loc)
+            public FindTriangle(Triangle tri, PointShapeRelation rel, PointOnTriangle loc)
             {
                 Triangle = tri;
+                Relation = rel;
                 Location = loc;
             }
         }

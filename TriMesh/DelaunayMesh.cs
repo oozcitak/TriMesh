@@ -188,24 +188,24 @@ namespace TriMesh
         /// performing local edge swaps as necessary to keep the mesh
         /// delaunay.
         /// </summary>
-        /// <param name="t">The triangle to divide</param>
+        /// <param name="tt">The triangle to divide</param>
         /// <param name="v">The vertex inside the triangle</param>
-        private void DivideTriangleAtVertex(Triangle t, Vertex v)
+        private void DivideTriangleAtVertex(Triangle tt, Vertex v)
         {
-            OnDividingTriangle(new DividingTriangleEventArgs(v, new Triangle[] { t }));
+            OnDividingTriangle(new DividingTriangleEventArgs(v, new Triangle[] { tt }));
 
-            Triangle t1 = new Triangle(t.V1, t.V2, v);
-            Triangle t2 = new Triangle(t.V2, t.V3, v);
-            Triangle t3 = new Triangle(t.V3, t.V1, v);
+            Triangle t1 = new Triangle(tt.V1, tt.V2, v);
+            Triangle t2 = new Triangle(tt.V2, tt.V3, v);
+            Triangle t3 = new Triangle(tt.V3, tt.V1, v);
 
-            t1.SetMeshParams(t.S12.Opposite, t2.S31, t3.S23);
-            t2.SetMeshParams(t.S23.Opposite, t3.S31, t1.S23);
-            t3.SetMeshParams(t.S31.Opposite, t1.S31, t2.S23);
+            t1.SetMeshParams(tt.S12.Opposite, t2.S31, t3.S23);
+            t2.SetMeshParams(tt.S23.Opposite, t3.S31, t1.S23);
+            t3.SetMeshParams(tt.S31.Opposite, t1.S31, t2.S23);
 
-            t.removed = true;
+            tt.removed = true;
             Triangles.SetRootTriangle(t1);
 
-            OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { t }, new Triangle[] { t1, t2, t3 }));
+            OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { tt }, new Triangle[] { t1, t2, t3 }));
 
             // edge flip
             SwapTest(t1.S12, v);
@@ -214,8 +214,36 @@ namespace TriMesh
         }
 
         /// <summary>
-        /// Divide two triangles at the given vertex located at
-        /// their shared side into four new triangles performing local
+        /// Divides a triangles at the given vertex located on
+        /// its edge into two new triangles performing local
+        /// edge swaps as necessary to keep the mesh delaunay.
+        /// </summary>
+        /// <param name="tt">First triangle to divide</param>
+        /// <param name="loc">The location of the vertex on the first triangle</param>
+        /// <param name="tt2">Second triangle to divide</param>
+        /// <param name="loc2">The location of the vertex on the second triangle</param>
+        /// <param name="v">The vertex on the shared side</param>
+        private void DivideTriangleOnEdge(Triangle tt, PointOnTriangle loc, Vertex v)
+        {
+            OnDividingTriangle(new DividingTriangleEventArgs(v, new Triangle[] { tt }));
+
+            // Divide into two triangles
+            Triangle[] tn1 = DivideTriangleOnEdgeNoSwap(tt, loc, v);
+
+            Triangle t1 = tn1[0];
+            Triangle t2 = tn1[1];
+            t1.SetMeshParams(null, t2.S31, null);
+            t2.SetMeshParams(null, null, t1.S23);
+
+            tt.removed = true;
+            Triangles.SetRootTriangle(t1);
+
+            OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { tt }, new Triangle[] { t1, t2 }));
+        }
+
+        /// <summary>
+        /// Divide two triangles at the given vertex located on
+        /// their shared edge into four new triangles performing local
         /// edge swaps as necessary to keep the mesh delaunay.
         /// </summary>
         /// <param name="tt1">First triangle to divide</param>
@@ -231,8 +259,8 @@ namespace TriMesh
             Halfedge e2 = (loc2 == PointOnTriangle.OnS12 ? tt2.S12 : (loc2 == PointOnTriangle.OnS23 ? tt2.S23 : tt2.S31));
 
             // Divide into four triangles
-            Triangle[] tn1 = DivideTriangleOnEdge(tt1, loc1, v);
-            Triangle[] tn2 = DivideTriangleOnEdge(tt2, loc2, v);
+            Triangle[] tn1 = DivideTriangleOnEdgeNoSwap(tt1, loc1, v);
+            Triangle[] tn2 = DivideTriangleOnEdgeNoSwap(tt2, loc2, v);
 
             Triangle t1 = tn1[0];
             Triangle t2 = tn1[1];
@@ -263,7 +291,7 @@ namespace TriMesh
         /// <param name="t">The triangle to divide</param>
         /// <param name="loc">The location of the vertex on the triangle</param>
         /// <param name="v">The vertex on the side</param>
-        private Triangle[] DivideTriangleOnEdge(Triangle t, PointOnTriangle loc, Vertex v)
+        private Triangle[] DivideTriangleOnEdgeNoSwap(Triangle t, PointOnTriangle loc, Vertex v)
         {
             Triangle t1 = null;
             Triangle t2 = null;

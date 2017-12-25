@@ -57,9 +57,6 @@ namespace TriMesh
         /// </summary>
         public Triangle N31 { get { return (S31 == null ? null : (S31.Opposite == null ? null : S31.Opposite.Parent)); } }
 
-        internal bool removed = false;
-        internal int mark = 0;
-
         /// <summary>
         /// Gets the centroid.
         /// </summary>
@@ -153,6 +150,16 @@ namespace TriMesh
         public bool IsSuperTriangle { get { return V1.IsSuperVertex | V2.IsSuperVertex | V3.IsSuperVertex; } }
 
         /// <summary>
+        /// Gets whether the triangle was removed during mesh operations.
+        /// </summary>
+        internal bool IsRemoved { get; set; }
+        /// <summary>
+        /// Gets or sets the iteration marker. The iterator marks each triangle as
+        /// it passes, and skips triangles alrady marked.
+        /// </summary>
+        internal int Mark { get; set; }
+
+        /// <summary>
         /// Instantiates a new triangle object.
         /// </summary>
         /// <param name="v1">The first vertex</param>
@@ -171,6 +178,9 @@ namespace TriMesh
             S12.SetMeshParams(this, S31, S23, null);
             S23.SetMeshParams(this, S12, S31, null);
             S31.SetMeshParams(this, S23, S12, null);
+
+            IsRemoved = false;
+            Mark = 0;
         }
 
         /// <summary>

@@ -141,7 +141,7 @@ namespace TriMesh
         {
             foreach (Triangle t in Triangles)
             {
-                if (t.IsSuperTriangle) t.removed = true;
+                if (t.IsSuperTriangle) t.IsRemoved = true;
             }
         }
 
@@ -205,7 +205,7 @@ namespace TriMesh
             t2.SetMeshParams(tt.S23.Opposite, t3.S31, t1.S23);
             t3.SetMeshParams(tt.S31.Opposite, t1.S31, t2.S23);
 
-            tt.removed = true;
+            tt.IsRemoved = true;
             Triangles.SetRootTriangle(t1);
 
             OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { tt }, new Triangle[] { t1, t2, t3 }));
@@ -238,7 +238,7 @@ namespace TriMesh
             t1.SetMeshParams(null, t2.S31, null);
             t2.SetMeshParams(null, null, t1.S23);
 
-            tt.removed = true;
+            tt.IsRemoved = true;
             Triangles.SetRootTriangle(t1);
 
             OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { tt }, new Triangle[] { t1, t2 }));
@@ -274,8 +274,8 @@ namespace TriMesh
             t3.SetMeshParams(t2.S12, t4.S31, null);
             t4.SetMeshParams(t1.S12, null, t3.S23);
 
-            tt1.removed = true;
-            tt2.removed = true;
+            tt1.IsRemoved = true;
+            tt2.IsRemoved = true;
             Triangles.SetRootTriangle(t1);
 
             OnDividedTriangle(new DividedTriangleEventArgs(v, new Triangle[] { tt1, tt2 }, new Triangle[] { t1, t2, t3, t4 }));
@@ -352,8 +352,8 @@ namespace TriMesh
             OnFlippingEdge(new FlippingEdgeEventArgs(e, tri, otherTri));
 
             // set flipped flag
-            tri.removed = true;
-            otherTri.removed = true;
+            tri.IsRemoved = true;
+            otherTri.IsRemoved = true;
 
             // flip edge a-b to p-d
             Triangle tn1 = new Triangle(d, p, a);

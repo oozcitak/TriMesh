@@ -40,16 +40,16 @@ namespace TriMesh
                     Triangle tri = stack.Pop();
 
                     // yield return this triangle if it has not been visited before
-                    if (!tri.removed && tri.mark != iterationMarker)
+                    if (!tri.IsRemoved && tri.Mark != iterationMarker)
                     {
                         yield return tri;
                     }
-                    tri.mark = iterationMarker;
+                    tri.Mark = iterationMarker;
 
                     // Add neighbours
-                    if (tri.N12 != null && tri.N12.mark != iterationMarker) stack.Push(tri.N12);
-                    if (tri.N23 != null && tri.N23.mark != iterationMarker) stack.Push(tri.N23);
-                    if (tri.N31 != null && tri.N31.mark != iterationMarker) stack.Push(tri.N31);
+                    if (tri.N12 != null && tri.N12.Mark != iterationMarker) stack.Push(tri.N12);
+                    if (tri.N23 != null && tri.N23.Mark != iterationMarker) stack.Push(tri.N23);
+                    if (tri.N31 != null && tri.N31.Mark != iterationMarker) stack.Push(tri.N31);
                 }
             }
         }

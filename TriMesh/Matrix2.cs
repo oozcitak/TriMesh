@@ -2,18 +2,42 @@
 
 namespace TriMesh
 {
+    /// <summary>
+    /// Represents a 2x2 matrix.
+    /// </summary>
     public sealed class Matrix2
     {
         private double? determinant = null;
 
+        /// <summary>
+        /// Gets the element at row 1, column 1
+        /// </summary>
         public double A11 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 1, column 2
+        /// </summary>
         public double A12 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 2, column 1
+        /// </summary>
         public double A21 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 2, column 2
+        /// </summary>
         public double A22 { get; private set; }
 
+        /// <summary>
+        /// Gets the zero matrix.
+        /// </summary>
         public static Matrix2 Zero { get { return new Matrix2(0, 0, 0, 0); } }
+        /// <summary>
+        /// Gets the identity matrix.
+        /// </summary>
         public static Matrix2 Identity { get { return new Matrix2(1, 0, 0, 1); } }
 
+        /// <summary>
+        /// Gets the determinant of the matrix.
+        /// </summary>
         public double Determinant
         {
             get
@@ -26,6 +50,13 @@ namespace TriMesh
             }
         }
 
+        /// <summary>
+        /// Instantiates a new 2x2 matrix.
+        /// </summary>
+        /// <param name="a11">The element at row 1, column 1</param>
+        /// <param name="a12">The element at row 1, column 2</param>
+        /// <param name="a21">The element at row 2, column 1</param>
+        /// <param name="a22">The element at row 2, column 2</param>
         public Matrix2(double a11, double a12, double a21, double a22)
         {
             A11 = a11; A12 = a12;

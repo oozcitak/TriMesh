@@ -37,6 +37,11 @@ namespace TriMesh
         /// </summary>
         public static Vertex Zero { get { return new Vertex(0, 0); } }
 
+        /// <summary>
+        /// Instantiates a new vertex.
+        /// </summary>
+        /// <param name="x">The X coordinate</param>
+        /// <param name="y">The Y coordinate</param>
         public Vertex(double x, double y, params double[] attributes)
         {
             X = x;

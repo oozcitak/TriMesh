@@ -24,7 +24,7 @@ namespace TriMesh
         }
 
         /// <summary>
-        /// Enumerates all valid (not removed nor flipped) triangles
+        /// Enumerates all valid (not removed) triangles
         /// of the mesh.
         /// </summary>
         public IEnumerator<Triangle> GetEnumerator()

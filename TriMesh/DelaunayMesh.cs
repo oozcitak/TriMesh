@@ -41,6 +41,9 @@ namespace TriMesh
         /// </summary>
         public TimeSpan ElapsedTimeWithEvents { get; private set; }
 
+        /// <summary>
+        /// Instantiates a new mesh instance.
+        /// </summary>
         public DelaunayMesh()
         {
             InputVertices = new VertexCollection();
@@ -108,7 +111,7 @@ namespace TriMesh
         private void CreateSuperTriangle()
         {
             // Offset limits to enclose all input vertices
-            Extents ex = limits.Offset(limits.Width / 5 + 1, limits.Height / 5 + 1);
+            Extents ex = limits.Expand(limits.Width / 5 + 1, limits.Height / 5 + 1);
             double x1 = ex.Xmin;
             double x2 = ex.Xmax;
             double y1 = ex.Ymin;

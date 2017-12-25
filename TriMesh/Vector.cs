@@ -9,6 +9,7 @@ namespace TriMesh
     {
         private double? len = null;
         private double? lensq = null;
+        private Vector normal = null;
 
         /// <summary>
         /// Gets the X coordinate.
@@ -32,6 +33,11 @@ namespace TriMesh
         /// </summary>
         public static Vector UnitY { get { return new Vector(0, 1); } }
 
+        /// <summary>
+        /// Instantiates a new vector.
+        /// </summary>
+        /// <param name="x">The X coordinate</param>
+        /// <param name="y">The Y coordinate</param>
         public Vector(double x, double y)
         {
             X = x;
@@ -69,9 +75,24 @@ namespace TriMesh
         }
 
         /// <summary>
+        /// Gets the vector normal to this one.
+        /// </summary>
+        public Vector Normal
+        {
+            get
+            {
+                if (normal == null)
+                {
+                    normal = new Vector(Y, -X).Normalize();
+                }
+                return normal;
+            }
+        }
+
+        /// <summary>
         /// Returns the normalized vector.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A unit vector in the same direction</returns>
         public Vector Normalize()
         {
             return this / this.Length;

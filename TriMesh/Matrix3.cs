@@ -2,23 +2,62 @@
 
 namespace TriMesh
 {
+    /// <summary>
+    /// Represents a 3x3 matrix.
+    /// </summary>
     public sealed class Matrix3
     {
         private double? determinant = null;
 
+        /// <summary>
+        /// Gets the element at row 1, column 1
+        /// </summary>
         public double A11 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 1, column 2
+        /// </summary>
         public double A12 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 1, column 3
+        /// </summary>
         public double A13 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 2, column 1
+        /// </summary>
         public double A21 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 2, column 2
+        /// </summary>
         public double A22 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 2, column 3
+        /// </summary>
         public double A23 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 3, column 1
+        /// </summary>
         public double A31 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 3, column 2
+        /// </summary>
         public double A32 { get; private set; }
+        /// <summary>
+        /// Gets the element at row 3, column 3
+        /// </summary>
         public double A33 { get; private set; }
 
+        /// <summary>
+        /// Gets the zero matrix.
+        /// </summary>
         public static Matrix3 Zero { get { return new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0); } }
+        /// <summary>
+        /// Gets the identity matrix.
+        /// </summary>
         public static Matrix3 Identity { get { return new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1); } }
 
+        /// <summary>
+        /// Gets the determinant of the matrix.
+        /// </summary>
         public double Determinant
         {
             get
@@ -31,6 +70,18 @@ namespace TriMesh
             }
         }
 
+        /// <summary>
+        /// Instantiates a new 3x3 matrix.
+        /// </summary>
+        /// <param name="a11">The element at row 1, column 1</param>
+        /// <param name="a12">The element at row 1, column 2</param>
+        /// <param name="a13">The element at row 1, column 3</param>
+        /// <param name="a21">The element at row 2, column 1</param>
+        /// <param name="a22">The element at row 2, column 2</param>
+        /// <param name="a23">The element at row 2, column 3</param>
+        /// <param name="a31">The element at row 3, column 1</param>
+        /// <param name="a32">The element at row 3, column 2</param>
+        /// <param name="a33">The element at row 3, column 3</param>
         public Matrix3(double a11, double a12, double a13, double a21, double a22, double a23, double a31, double a32, double a33)
         {
             A11 = a11; A12 = a12; A13 = a13;

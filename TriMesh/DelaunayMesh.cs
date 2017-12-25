@@ -321,8 +321,8 @@ namespace TriMesh
             OnFlippingEdge(new FlippingEdgeEventArgs(e, tri, otherTri));
 
             // set flipped flag
-            tri.flipped = true;
-            otherTri.flipped = true;
+            tri.removed = true;
+            otherTri.removed = true;
 
             // flip edge a-b to p-d
             Triangle tn1 = new Triangle(d, p, a);

@@ -8,13 +8,13 @@ namespace TriMesh
     /// <summary>
     /// Represents a collection of triangles.
     /// </summary>
-    public class TriangleCollection : IReadOnlyCollection<Triangle>
+    public class TriangleCollection : IEnumerable<Triangle>
     {
         private Triangle root = null;
         private int iterationMarker = 0;
 
         /// <summary>
-        /// Sets the root triangle to the givn one. The root triangle is used as
+        /// Sets the root triangle to the given one. The root triangle is used as
         /// a starting point in vertex searches and other iterations.
         /// </summary>
         /// <param name="t">New root triangle</param>
@@ -22,11 +22,6 @@ namespace TriMesh
         {
             root = t;
         }
-
-        /// <summary>
-        /// Gets the number of valid (not removed nor flipped) triangles.
-        /// </summary>
-        public int Count { get { return this.Count(); } }
 
         /// <summary>
         /// Enumerates all valid (not removed nor flipped) triangles
@@ -45,7 +40,7 @@ namespace TriMesh
                     Triangle tri = stack.Pop();
 
                     // yield return this triangle if it has not been visited before
-                    if (!tri.removed && !tri.flipped && tri.mark != iterationMarker)
+                    if (!tri.removed && tri.mark != iterationMarker)
                     {
                         yield return tri;
                     }
@@ -125,7 +120,5 @@ namespace TriMesh
                 Location = loc;
             }
         }
-
-
     }
 }

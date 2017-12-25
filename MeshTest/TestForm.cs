@@ -42,7 +42,7 @@ namespace MeshTest
             }
             anim.Add(new MeshAnim("Started", null, null, null, null, null));
             mesh.Triangulate();
-            statusLabel.Text = "Created " + mesh.Triangles.Count + " triangles from " + mesh.InputVertices.Count + " input vertices in " + mesh.ElapsedTime.TotalSeconds.ToString("0.00") + " seconds (" + mesh.ElapsedTimeWithEvents.TotalSeconds.ToString("0.00") + " seconds with events).";
+            statusLabel.Text = "Created " + mesh.Triangles.Count() + " triangles from " + mesh.InputVertices.Count + " input vertices in " + mesh.ElapsedTime.TotalSeconds.ToString("0.00") + " seconds (" + mesh.ElapsedTimeWithEvents.TotalSeconds.ToString("0.00") + " seconds with events).";
 
             anim.Add(new MeshAnim("Completed", null, mesh.Triangles.ToList(), null, null, null));
 

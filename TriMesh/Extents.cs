@@ -43,7 +43,7 @@ namespace TriMesh
             return Xmin.ToString("F2") + " ~ " + Xmax.ToString("F2") + ", " + Ymin.ToString("F2") + " ~ " + Ymax.ToString("F2");
         }
 
-        public Extents Offset(double dx,double dy)
+        public Extents Offset(double dx, double dy)
         {
             Extents ex = new Extents();
             ex.Add(Xmin - dx, Ymin - dy);
